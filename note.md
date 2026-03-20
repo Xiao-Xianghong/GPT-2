@@ -1,10 +1,10 @@
 The token embedding dimensions and the positional encoding dimensions are the same. After encoding, they shall be added to store tokens' meanings and positional information!
 
-**Reasons**
+***Reasons***
 
 The self-attention mechanism can not understand the positional order, we must fuse the positional information to the encoded tokens
 
-**Self-Attention**
+***Self-Attention***
 
 **input size: [n, dims]**, where n means the textual length and dims means the dimentions of token vector.
 
@@ -20,7 +20,16 @@ K = matmul(input, W_K), **K.size = [n, n_k]**.Each line means a token's n_k keys
 
 V = matmul(input, W_V), **V.size = [n, dims]**.Each line means a token's "meaning"
 
-attention = matmul(Q, transpose(K)), **attention.size = [n, n]**. attention_(i, j) means i_th token's querys multiply with j_th token's keys, referring the attention from i_th token to j_th token. ***i_th line means i_th token's attention to all the tokens***.
+attention = matmul(Q, transpose(K)), **attention.size = [n, n]**. attention_(i, j) means i_th token's querys multiply with j_th token's keys, referring the attention from i_th token to j_th token. **i_th line means i_th token's attention to all the tokens**.
 
 output = matmul(attention, V), **output.size = [n, dims]**. Each line means an attentioned token!
 
+***How to segment words***
+
+Using algorithm BPE: Training data is a textual data. The core mechanism is to count the frequency of combinations consist of two conponents in current library. The combination with the highest frequency will be added to current library, and iterate continously until the library is filled.
+
+***How to generate the next token***
+
+input:[n, dims]. Using the last token, [1, dims], mapping it to the probabilities of all tokens in the library. matmul(last token, embedding matrix).
+
+mask到底何时触发？什么时候才要把后面词遮住？训练时？预测时？
