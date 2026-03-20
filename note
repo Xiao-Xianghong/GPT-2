@@ -1,0 +1,2 @@
+The token embedding dimensions and the positional encoding dimensions are the same. After encoding, they shall be added to store tokens' meanings and positional
+information!
