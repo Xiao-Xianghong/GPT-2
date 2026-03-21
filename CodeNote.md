@@ -18,3 +18,9 @@ self.transformer = nn.ModuleDict(dict(wte = nn.Embedding(n1, n2)))
 
 h = nn.ModuleList([Block(config) for _ in range(config.n_layer)])
 h表示transformers的深度，是建立一个可学习的Module列表List，其中有config.n_layer个Block。而每个Block是多头transformer
+
+BatchNorm： 逐通道进行归一化，对同一通道的各个样本归一化。
+LayerNorm： 逐样本进行归一化，对同一样本的各个通道归一化。
+GPT2 先LayerNorm再attn或mlp，归一化位于残差连接内部。
+x = x + attn(ln(x)) √
+
