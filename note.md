@@ -32,4 +32,11 @@ Using algorithm BPE: Training data is a textual data. The core mechanism is to c
 
 input:[n, dims]. Using the last token, [1, dims], mapping it to the probabilities of all tokens in the library. matmul(last token, embedding matrix).
 
-mask到底何时触发？什么时候才要把后面词遮住？训练时？预测时？
+***When to mask the attention and why?***
+
+GPTs' task is predicting the next word, so during the training period, the model can't see the next word and the following words. Otherwise the model will pay much attention to the answer word, causing a failed train. In testing period, the model need to perform like how it had been trained, so the attention is masked.
+
+***Embedding and positional encode***
+The embedding matrix is 50257*768, as there are 50257 tokens in the library and each token's vector has a dimension of 768.
+
+The position matrix is 1024*768, as the GPT-2's maximum textual length is 1024.
