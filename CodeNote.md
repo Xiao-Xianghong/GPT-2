@@ -24,3 +24,7 @@ LayerNorm： 逐样本进行归一化，对同一样本的各个通道归一化�
 GPT2 先LayerNorm再attn或mlp，归一化位于残差连接内部。
 x = x + attn(ln(x)) √
 
+self.register_buffer("bias", torch.tril(torch.ones(config.block_size, config.block_size)) .view(1, 1, config.block_size, config.block_size))
+***self.register_buffer("bias", tensor)***   bias为键名，tensor为待注册的张量 后续使用：self.bias
+register_buffer是nn.Module的一个函数，用于将tensor注册为模型的缓冲变量 **被模型管理，但不可训练**
+tril是lower triangular，下三角矩阵；triu是upper triangular，上三角矩阵
