@@ -43,3 +43,12 @@ y = y.transpose(1, 2).contiguous().view(B, T, C) transpose操作只改引索和�
 而@、Conv2d、Linear、softmax不要求内存连续
        
 ***GPT forward***
+input: idx, targets
+idx.size() = [B, T], targets.size() = [B, T]
+idx表示B批次T个token的序号，首先根据embedding矩阵将其映射为向量 -> [B, T, n_embd]. 同时进行位置embedding，根据输入样本的T来产生0~T-1的位置引索,再用positional embedding矩阵将其映射 -> [T, n_embd]
+二者相加后进入transformer层得到[B, T, vocab_size]的logits，意为每个位置对下一token的预测概率
+再与target（记录每个位置的下一token的引索）求loss
+**loss函数是用交叉熵损失，而非MSE。cross_entropy(x, y) x.size = [n, p], y.size = [n] 函数先对x进行softmax，随后对n个样本中的每一个样本，y存储了正确答案的引索，通过y找x中正确答案的概率预测值，再求负对数。**
+
+***Data Processing***
+tiktoken库：
