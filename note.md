@@ -12,17 +12,19 @@ The self-attention mechanism can not understand the positional order, we must fu
 
 **W_K size: [dims, n_k]**, where n_k means the number of keys.
 
-**W_V size: [dims, dims]**.
+**W_V size: [dims, n_v]**. where n_v means the dims of value.
 
 Q = matmul(input, W_Q), **Q.size = [n, n_q]**.Each line means a token's n_q querys.
 
 K = matmul(input, W_K), **K.size = [n, n_k]**.Each line means a token's n_k keys.
 
-V = matmul(input, W_V), **V.size = [n, dims]**.Each line means a token's "meaning"
+V = matmul(input, W_V), **V.size = [n, n_v]**.Each line means a token's "meaning"
 
 attention = matmul(Q, transpose(K)), **attention.size = [n, n]**. attention_(i, j) means i_th token's querys multiply with j_th token's keys, referring the attention from i_th token to j_th token. **i_th line means i_th token's attention to all the tokens**.
 
-output = matmul(attention, V), **output.size = [n, dims]**. Each line means an attentioned token!
+output = matmul(attention, V), **output.size = [n, n_v]**. Each line means an attentioned token!
+
+output_final = c_proj(output), mapping the n_v to dims and interacting multiple attention heads.
 
 ***How to segment words***
 
