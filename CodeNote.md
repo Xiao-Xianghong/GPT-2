@@ -14,7 +14,7 @@ d = dict(a=1, b=2.5)即定义键名a，初始值为1 键名b，初始值为2.5
 
 self.transformer = nn.ModuleDict(dict(wte = nn.Embedding(n1, n2)))
 则是将键名"wte"对应的Embedding矩阵注册为可学习的Module
-访问: self.transfoermer["wte"](input)
+访问: self.transfoermer.wte(input)
 
 h = nn.ModuleList([Block(config) for _ in range(config.n_layer)])
 h表示transformers的深度，是建立一个可学习的Module列表List，其中有config.n_layer个Block。而每个Block是多头transformer
@@ -42,3 +42,4 @@ att = F.softmax(att, dim=-1) # softmax over the LAST DIMENSION, not the last two
 y = y.transpose(1, 2).contiguous().view(B, T, C) transpose操作只改引索和访问步长，不改数据的存储结构，进行view重构数据结构前需要用contiguous函数使其连续
 而@、Conv2d、Linear、softmax不要求内存连续
        
+***GPT forward***
