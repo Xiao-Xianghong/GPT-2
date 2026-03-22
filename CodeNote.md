@@ -28,3 +28,17 @@ self.register_buffer("bias", torch.tril(torch.ones(config.block_size, config.blo
 ***self.register_buffer("bias", tensor)***   bias为键名，tensor为待注册的张量 后续使用：self.bias
 register_buffer是nn.Module的一个函数，用于将tensor注册为模型的缓冲变量 **被模型管理，但不可训练**
 tril是lower triangular，下三角矩阵；triu是upper triangular，上三角矩阵
+这里形状固定为[block_size, block_size], 后续使用时会根据输入batch的T(tokens数)来裁剪：self.bias[:, :, :T, :T]
+
+self.c_attn = nn.Linear(config.n_embd, 3 * config.n_embd)
+将QKV矩阵合并成大矩阵一起运算随后拆分，GPT-2实现中，n_query=n_key=n_embd
+
+tensor.masked_fill(mask, value)函数 根据mask来给tensor对应值填上value
+att = att.masked_fill(self.bias[:, :, :T, :T] == 0, float('-inf')) att上三角区（除对角线）被填充为-inf
+
+att = F.softmax(att, dim=-1) # softmax over the LAST DIMENSION, not the last two dims
+做softmax时注意只对**最后一维**进行，表示一个token对其它token的attention的归一化。若对两维一起softmax，则是整张注意力图一起归一化
+
+y = y.transpose(1, 2).contiguous().view(B, T, C) transpose操作只改引索和访问步长，不改数据的存储结构，进行view重构数据结构前需要用contiguous函数使其连续
+而@、Conv2d、Linear、softmax不要求内存连续
+       
