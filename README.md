@@ -17,7 +17,7 @@ You're supposed to use a conda virtual environment.
 Install PyTorch according to your CUDA version:
 https://pytorch.org/get-started/locally/
 
-run this code in bash to install dependences
+run this code in bash to install dependences (include torch==2.5.1)
 ```bash
 pip install -r requirements.txt
 ```
