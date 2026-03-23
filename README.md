@@ -1,6 +1,12 @@
 ## GPT-2
 How to build and train a LLM like GPT-2, some notes and some codes.
 
+## Clone this repository
+```bash
+git clone https://github.com/Xiao-Xianghong/GPT-2/
+cd GPT-2
+```
+
 ## Environment and dependence
 - Python 3.10
 - PyTorch 2.5.1
@@ -23,3 +29,5 @@ The batch size is set to 4 due to GPU memory constraints (NVIDIA GeForce RTX 406
 If you have access to a GPU with larger memory, increasing the batch size may help accelerate training.
 
 The model is trained for 500 epochs, and checkpoints are saved every 250 epochs.
+
+##
