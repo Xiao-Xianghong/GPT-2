@@ -51,7 +51,7 @@ idx表示B批次T个token的序号，首先根据embedding矩阵将其映射为�
 **loss函数是用交叉熵损失，而非MSE。cross_entropy(x, y) x.size = [n, p], y.size = [n] 函数先对x进行softmax，随后对n个样本中的每一个样本，y存储了正确答案的引索，通过y找x中正确答案的概率预测值，再求负对数。**
 
 ***Data Processing***
-tiktoken库：提供预处理好的BPE分词库
+tiktoken库：提供预处理好的BPE分词库，**encode为每个token获取对应的id**
 文本读取并token化后，截出训练样本
 for i in range(0, len(full_encoded) - self.block_size, self.block_size):
             chunk = full_encoded[i:i + self.block_size + 1] # +1 for the target token
@@ -59,3 +59,15 @@ for i in range(0, len(full_encoded) - self.block_size, self.block_size):
 i from 0 to (text_length-block_size), with a stride of block_size
 每次截i~i+block_size+1的长度，+1是为了获取targets（targets总是滞后一个token）,将其全部放入self.encoded_data内
 self.encoded_data内每个引索存的长为block_size+1的张量，前block_size是x，训练数据；后block_size是y，targets
+
+MyDataset返回一个列表，列表每一项是一个元组(x, y)
+
+***training script***
+数据流：
+dataset = MyDataset('input.txt') #[n_chunks] -> 求Dataset长度，90%用于训练，10%用于验证。随机分为train_data #[n_chunks - 0.1 * n_chunks] 和 val_data #[0.1 * n_chunks]
+使用DataLoader将train_data和val_data分成batch， 每个batch数据[B, （x, y）]
+得到train_loader和val_loader
+for batch_idx, (x, y) in enumerate(train_loader):
+        x, y = x.to(device), y.to(device)
+每个batch内，取出batch_size个(x, y)，x.size() = [B, T]， y.size() = [B, T], 送入model
+算loss时是算一个batch的平均loss，将所有batch的loss求总和再除以len(train/val_loader)得到每个epoch训练/验证的平均loss
