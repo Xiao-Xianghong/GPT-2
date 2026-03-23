@@ -3,11 +3,13 @@ How to build and train a LLM like GPT-2, some notes and some codes.
 
 ## Clone this repository
 ```bash
-git clone https://github.com/Xiao-Xianghong/GPT-2/
+git clone https://github.com/Xiao-Xianghong/GPT-2.git
 cd GPT-2
 ```
 
 ## Environment and dependence
+You're supposed to use a conda virtual environment. 
+
 - Python 3.10
 - PyTorch 2.5.1
 - CUDA 13.1
@@ -30,4 +32,7 @@ If you have access to a GPU with larger memory, increasing the batch size may he
 
 The model is trained for 500 epochs, and checkpoints are saved every 250 epochs.
 
-##
+## Start training！
+```bash
+python train.py
+```
